@@ -1,18 +1,38 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="section">
+    <h2 class="title">{{ title }}</h2>
+    <h3 class="title">Same App with different frameworks or languages</h3>
+    <div class="container">
+      <div v-for="project in projects" class="card" :key="project.id">
+        <ProjectsCard :project="project" />
+      </div>
+    </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import { Project } from '../ts/interfaces';
+import axios from 'axios';
+import ProjectsCard from '../components/ProjectsCard.vue';
 
-export default defineComponent({
-  name: 'Home',
-  components: {
-    HelloWorld,
-  },
+let url = 'https://assitant-app.netlify.app/api/projects-api';
+let projects = ref<Project[]>([]);
+
+let title = computed(() => {
+  return projects.value.length > 0 ? 'Assistant' : 'Loading...';
 });
+
+onMounted(() => {
+  getData();
+});
+const getData = async () => {
+  try {
+    const response = await axios.get(url);
+    const data = await response.data;
+    projects.value = data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
