@@ -3,7 +3,11 @@
     <h2 class="title">{{ title }}</h2>
     <h3 class="title">Same App with different frameworks or languages</h3>
     <div class="container">
-      <div v-for="project in projects" class="card" :key="project.id">
+      <div
+        v-for="project in store.state.projects"
+        class="card"
+        :key="project.id"
+      >
         <ProjectsCard :project="project" />
       </div>
     </div>
@@ -11,28 +15,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { Project } from '../ts/interfaces';
-import axios from 'axios';
+import { computed, onMounted } from 'vue';
 import ProjectsCard from '../components/ProjectsCard.vue';
-
-let url = 'https://assitant-app.netlify.app/api/projects-api';
-let projects = ref<Project[]>([]);
+import { actionType } from '../ts/store/actionType';
+import { useStore } from 'vuex';
+const store = useStore();
 
 let title = computed(() => {
-  return projects.value.length > 0 ? 'Assistant' : 'Loading...';
+  return store.state.projects.length > 0 ? 'Assistant' : 'Loading...';
 });
 
 onMounted(() => {
-  getData();
-});
-const getData = async () => {
-  try {
-    const response = await axios.get(url);
-    const data = await response.data;
-    projects.value = data;
-  } catch (error) {
-    console.log(error);
+  if (store.state.projects.length === 0) {
+    store.dispatch(actionType.GET_PROJECTS);
   }
-};
+});
 </script>

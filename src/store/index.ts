@@ -1,6 +1,8 @@
 import { createStore } from 'vuex';
-import { Item } from '../ts/interfaces';
+import axios from 'axios';
+import { Item, Project } from '../ts/interfaces';
 import { actionType } from '../ts/store/actionType';
+const url = 'https://assitant-app.netlify.app/api/projects-api';
 const getLocalStorage = () => {
   let todoList = localStorage.getItem('VuextodoListTs');
   if (todoList) {
@@ -18,6 +20,7 @@ const saveLocalStorage = (todoList: Item[]) => {
 
 export default createStore({
   state: {
+    projects: [] as Project[],
     todoList: getLocalStorage(),
     showAlert: false,
     isEditing: false,
@@ -29,7 +32,11 @@ export default createStore({
       type: '',
     },
   },
+
   mutations: {
+    GET_PROJECTS(state, payload: Project[]) {
+      state.projects = payload;
+    },
     UPDATE_MESSAGE(state, payload) {
       state.ItemValue = payload;
     },
@@ -106,6 +113,15 @@ export default createStore({
     },
   },
   actions: {
+    async GET_PROJECTS(context) {
+      try {
+        const response = await axios.get(url);
+        const data = await response.data;
+        context.commit('GET_PROJECTS', data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     UPDATE_MESSAGE(context, payload) {
       context.commit(actionType.UPDATE_MESSAGE, payload);
     },
@@ -163,5 +179,4 @@ export default createStore({
       commit(actionType.DISPLAY_ALERT, alertMessege);
     },
   },
-  modules: {},
 });
