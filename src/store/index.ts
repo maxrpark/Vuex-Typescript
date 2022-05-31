@@ -13,7 +13,7 @@ const getLocalStorage = () => {
     return [];
   }
 };
-
+let timeOut = 0;
 const saveLocalStorage = (todoList: Item[]) => {
   localStorage.setItem('VuextodoListTs', JSON.stringify(todoList));
 };
@@ -26,7 +26,7 @@ export default createStore({
     isEditing: false,
     ItemID: '',
     ItemValue: '',
-    timeOut: 0,
+    // timeOut: 0,
     alertMessege: {
       messege: '',
       type: '',
@@ -103,10 +103,10 @@ export default createStore({
       state.alertMessege = payload;
       state.showAlert = true;
 
-      clearInterval(state.timeOut);
+      clearTimeout(timeOut);
 
       if (!state.isEditing) {
-        state.timeOut = setTimeout(() => {
+        timeOut = setTimeout(() => {
           state.showAlert = false;
         }, 1500);
       }
