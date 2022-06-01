@@ -1,6 +1,6 @@
 <template>
   <div class="section-center section">
-    <h2 className="title">Vue assistant</h2>
+    <h2 className="title">Vuex Typescript assistant</h2>
     <Alert />
     <section class="main-container">
       <h2>Task List</h2>
