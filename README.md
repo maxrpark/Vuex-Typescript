@@ -16,3 +16,4 @@ I hope, I keep learning new onces in the future so this project expects more and
 
 You can take a look at the website by clicking the next link
 [Assitant Vuex Typescript App](https://vuex-typescript-assistant-app.netlify.app/).
+
